@@ -22,12 +22,10 @@ class HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-        TextField(
-        controller: _controller,
-        decoration: const InputDecoration(
-          labelText: 'Enter text',
-        ),
-      ),
+          Container(
+          alignment:Alignment.center,
+          child:const Text('Serenity')
+          )
 
 
           ],
