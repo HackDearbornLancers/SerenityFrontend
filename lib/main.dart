@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:serenity/pages/home_page.dart';
+import 'package:serenity/realm/realm.dart';
 
 void main() {
+deleteRealmDatabase();
   runApp(const MyApp());
 }
 
@@ -22,4 +24,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
