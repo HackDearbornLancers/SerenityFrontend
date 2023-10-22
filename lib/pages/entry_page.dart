@@ -63,13 +63,19 @@ class EntryPageState extends State<EntryPage> {
                         messages.isNotEmpty) {
                       moveToMessages();
 
+                      sentimental(messages).then((value) {
                       final entry = Entry(
-                          widget.name, DateTime.now(), widget.location, 0.5,
+                          widget.name, DateTime.now(), widget.location, value,
                           content: messages);
 
                       realm.write(() {
                         realm.add(entry, update: true);
                       });
+
+
+                      }
+                      );
+
                     }
 
                     Navigator.of(context).push(
@@ -97,6 +103,8 @@ class EntryPageState extends State<EntryPage> {
 
                       openaiResponse(messages).then((value) => {
                       setState(() {
+                      
+
                       messages.add(Message(generateUniqueId(),value,1));
 
                                               

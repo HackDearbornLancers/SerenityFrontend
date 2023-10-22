@@ -38,7 +38,9 @@ class JournalPageState extends State<JournalPage> {
         ],
         title: Text("Entries"),
       ),
-      body: ListView.separated(
+      body: Padding(
+      padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+      child:ListView.separated(
         itemCount: entries.length,
 separatorBuilder: (context, index) {
           // Add space between tiles
@@ -49,6 +51,8 @@ separatorBuilder: (context, index) {
           return Container(
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12.0),
+              color: interpolateColor(entries[index].sentiment).withOpacity(0.1), // Border color
+
 
           border: Border.all(
 
@@ -71,6 +75,13 @@ separatorBuilder: (context, index) {
           ));
         },
       ),
-    );
+    ));
   }
 }
+Color interpolateColor(double value) {
+    // Map the value from -1 to 1 to a color between red and blue
+    final double clampedValue = value.clamp(-1.0, 1.0); // Ensure it's within the valid range
+    final int red = ((1 - clampedValue) * 255).round();
+    final int blue = ((1 + clampedValue) * 255).round();
+    return Color.fromARGB(255, red, 0, blue);
+  }

@@ -20,24 +20,26 @@ Future<String> openaiResponse(List<Message> messages) async {
   String body = jsonEncode(payLoad);
   final response =
       await http.post(Uri.parse("$ip/openai"), headers: headers, body: body);
-      var res = jsonDecode(response.body)["ai_response"];
+      var res = jsonDecode(response.body)["question"];
       print(res);
       return res;
 }
 
-// Future<String> register(String firstName, String middleName, String lastName,
-//     String email, String phoneNo, bool accept) async {
-//   String body = jsonEncode({
-//     'email': email,
-//     'firstName': firstName,
-//     'middleName': middleName,
-//     'lastName': lastName,
-//     'phoneNo': phoneNo,
-//     'accept': accept
-//   });
-//   final response = await http.post(Uri.parse("$ip/users/register"),
-//       headers: headers, body: body);
-//
-//   return jsonDecode(response.body)["message"];
-// }
-//
+Future<double> sentimental(List<Message> messages) async {
+  var payLoad = {
+    'text': messages.map((element){
+      return element.content;
+
+    }
+    ).reduce((value, element) => value+element)
+  };
+
+  String body = jsonEncode(payLoad);
+  final response =
+      await http.post(Uri.parse("$ip/sentiment"), headers: headers, body: body);
+      var res= jsonDecode(response.body)[""];
+      double score = res["sentiment_score"];
+      double magnitude = res["sentiment_magnitude"];
+      return score;
+}
+
