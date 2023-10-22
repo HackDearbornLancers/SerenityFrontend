@@ -1,16 +1,15 @@
 import 'package:realm/realm.dart';
 import 'package:serenity/realm/entry.dart';
 
-final config = Configuration.local([Entry.schema]);
+final config = Configuration.local([Entry.schema, Message.schema]);
 
 final realm = Realm(config);
 void deleteRealmDatabase() async {
   final config = Configuration.local(
-    [Entry.schema],
+    [Entry.schema, Message.schema],
   );
 
   try {
-
     // Use the `deleteRealm` method to delete the entire Realm.
     Realm.deleteRealm(config.path);
 

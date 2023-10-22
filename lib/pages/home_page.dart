@@ -9,7 +9,9 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -27,15 +29,15 @@ class HomePageState extends State<HomePage> {
                 alignment: Alignment.center, child: const Text('Serenity')),
             Spacer(flex: 6),
             TextField(
-              controller: _controller,
+              controller: nameController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: 'Name',
+                labelText: 'Username',
               ),
             ),
             SizedBox(height: 10),
             TextField(
-              controller: _controller,
+              controller: passwordController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Password',

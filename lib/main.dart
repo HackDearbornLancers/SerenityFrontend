@@ -3,7 +3,7 @@ import 'package:serenity/pages/home_page.dart';
 import 'package:serenity/realm/realm.dart';
 
 void main() {
-deleteRealmDatabase();
+  deleteRealmDatabase();
   runApp(const MyApp());
 }
 

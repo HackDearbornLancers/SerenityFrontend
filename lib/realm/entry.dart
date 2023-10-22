@@ -6,7 +6,16 @@ class _Entry {
   @PrimaryKey()
   late final String name;
   late final DateTime date;
-  late String content;
+  late List<_Message> content;
   late String location;
   late double sentiment;
+}
+
+//0 = User, 1 = AI
+@RealmModel()
+class _Message {
+  @PrimaryKey()
+  late int id;
+  late String content;
+  late int speaker;
 }

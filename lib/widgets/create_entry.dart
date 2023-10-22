@@ -9,24 +9,27 @@ class CreateEntry extends StatefulWidget {
 }
 
 class CreateEntryState extends State<CreateEntry> {
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController locationController = TextEditingController();
+
+  
   bool conversational = true;
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-    scrollable:true,
+      scrollable: true,
       title: Text('Create Entry'),
       content: Column(
         children: [
           TextField(
-            controller: _controller,
+            controller: nameController,
             decoration: const InputDecoration(
-              labelText: 'Name',
+              labelText: 'Name (optional)',
             ),
           ),
           TextField(
-            controller: _controller,
+            controller: locationController,
             decoration: const InputDecoration(
               labelText: 'Location',
             ),
@@ -53,10 +56,17 @@ class CreateEntryState extends State<CreateEntry> {
       actions: <Widget>[
         TextButton(
             onPressed: () {
+            String name = nameController.text;
+            if (name.isEmpty){
+              var name = DateTime.now().toString();
+
+
+
+            }
               Navigator.of(context).pop();
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => EntryPage(
-                      name: _controller.text, location: _controller.text)));
+                      name: name, location: locationController.text)));
             },
             child: Text('Create')),
         TextButton(
