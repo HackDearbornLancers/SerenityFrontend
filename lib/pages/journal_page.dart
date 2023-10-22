@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:serenity/pages/entry_page.dart';
+import 'package:serenity/pages/home_page.dart';
 import 'package:serenity/realm/entry.dart';
 import 'package:serenity/realm/realm.dart';
 import 'package:serenity/widgets/create_entry.dart';
@@ -20,7 +22,7 @@ class JournalPageState extends State<JournalPage> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.of(context).pop(); // This handles the back action.
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HomePage())); // This handles the back action.
           },
         ),
         actions: [
@@ -36,15 +38,37 @@ class JournalPageState extends State<JournalPage> {
         ],
         title: Text("Entries"),
       ),
-      body: ListView.builder(
+      body: ListView.separated(
         itemCount: entries.length,
+separatorBuilder: (context, index) {
+          // Add space between tiles
+          return SizedBox(height: 16); // Adjust the height for the desired space
+        },
         itemBuilder: (BuildContext context, int index) {
-          return ListTile(
+
+          return Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12.0),
+
+          border: Border.all(
+
+              color: Colors.black, // Border color
+              width: 1.0, // Border width
+              
+            ),
+          ),
+          child:
+          
+          ListTile(
             title: Text(entries[index].name),
             onTap: () {
-              // Action to perform when the ListTile is tapped.
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => EntryPage(
+                      name: entries[index].name,
+                      location: entries[index].location,
+                      messages: entries[index].content)));
             },
-          );
+          ));
         },
       ),
     );

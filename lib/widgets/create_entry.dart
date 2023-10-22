@@ -12,7 +12,6 @@ class CreateEntryState extends State<CreateEntry> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
 
-  
   bool conversational = true;
 
   @override
@@ -56,13 +55,10 @@ class CreateEntryState extends State<CreateEntry> {
       actions: <Widget>[
         TextButton(
             onPressed: () {
-            String name = nameController.text;
-            if (name.isEmpty){
-              var name = DateTime.now().toString();
-
-
-
-            }
+              String name = nameController.text;
+              if (name.isEmpty) {
+                name = DateTime.now().toString();
+              }
               Navigator.of(context).pop();
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => EntryPage(

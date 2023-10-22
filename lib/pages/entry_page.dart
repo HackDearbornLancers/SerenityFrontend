@@ -11,8 +11,11 @@ import 'package:serenity/reqs.dart';
 class EntryPage extends StatefulWidget {
   String name;
   final String location;
-  EntryPage({Key? key, String? name, required this.location})
+  final List<Message> messages;
+  EntryPage(
+      {Key? key, String? name, List<Message>? messages, required this.location})
       : name = name ?? DateTime.now().toString(),
+        messages = messages ?? <Message>[],
         super(key: key);
 
   @override
@@ -30,11 +33,20 @@ class EntryPageState extends State<EntryPage> {
   List<Message> messages = [];
   void moveToMessages() {
     var text = _controller.document.toPlainText();
-    if (text.isEmpty) {
+
+    if (text.length == 1) {
       return;
     }
-    messages.add(Message(generateUniqueId(),text, 0));
-    _controller.document = Document()..insert(0, '');
+    realm.write(() {
+      messages.add(Message(generateUniqueId(), text, 0));
+      _controller.document = Document()..insert(0, '');
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    messages = widget.messages;
   }
 
   @override
@@ -56,25 +68,39 @@ class EntryPageState extends State<EntryPage> {
                           content: messages);
 
                       realm.write(() {
-                        realm.add(entry);
+                        realm.add(entry, update: true);
                       });
                     }
 
                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => JournalPage()));
-
+                        PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) {
+        return JournalPage();
+      },transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(-1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.easeInOut;
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var offsetAnimation = animation.drive(tween);
+        return SlideTransition(position: offsetAnimation, child: child);
+      },));
                   },
                   icon: Icon(Icons.arrow_back)),
               actions: [
                 IconButton(
                     onPressed: () {
+                      if (_controller.document.isEmpty()) {
+                        return;
+                      }
                       setState(() {
                         moveToMessages();
                       });
+
                       openaiResponse(messages).then((value) => {
+                      setState(() {
+                      messages.add(Message(generateUniqueId(),value,1));
 
-                      
-
+                                              
+                                            })
                       });
 
                       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -83,7 +109,6 @@ class EntryPageState extends State<EntryPage> {
                             .jumpTo(_scrollController.position.maxScrollExtent);
                       });
 
-                      //call api
                     },
                     icon: Icon(Icons.speaker_notes)),
                 TextButton(
@@ -94,7 +119,7 @@ class EntryPageState extends State<EntryPage> {
               ],
             ),
             body: Padding(
-                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 50),
+                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                 child: Column(children: [
                   Expanded(
                       child: QuillProvider(
@@ -108,11 +133,25 @@ class EntryPageState extends State<EntryPage> {
                             controller: _scrollController,
                             itemCount: messages.length,
                             itemBuilder: (BuildContext context, int index) {
-                              return Material(child:ListTile(
-                              leading:Icon(Icons.person),
-                                title: Text(messages[index].content),
-                                tileColor:Colors.blue
-                              ));
+                            var icon = messages[index].speaker==0?Icon(Icons.person):Icon(Icons.smart_toy);
+                            var color = messages[index].speaker==0?Theme.of(context).primaryColor:Colors.red;
+                              return Container(
+                                  decoration: BoxDecoration(
+                                    gradient: RadialGradient(
+                                      colors: [
+                                      color
+                                            .withOpacity(0.4),
+                                        color.withOpacity(0.1)
+                                      ],
+                                      center: Alignment.center,
+                                      focal: Alignment.center,
+                                      radius: 10.0,
+                                    ),
+                                  ),
+                                  child: ListTile(
+                                    leading: icon, 
+                                    title: Text(messages[index].content),
+                                  ));
                             },
                           ),
                         ),
@@ -131,6 +170,7 @@ class EntryPageState extends State<EntryPage> {
                 ]))));
   }
 }
+
 int generateUniqueId() {
   // You can generate a unique ID here using your desired method.
   // For example, you can use the current timestamp as a unique ID.

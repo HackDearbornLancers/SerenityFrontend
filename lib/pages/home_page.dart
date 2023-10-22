@@ -12,22 +12,23 @@ class HomePageState extends State<HomePage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Center(
           child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Container(
-                alignment: Alignment.center, child: const Text('Serenity')),
-            Spacer(flex: 6),
+            Spacer(),
+            Image.asset("assets/logo.png"),
+            Spacer(flex: 2),
             TextField(
               controller: nameController,
               decoration: const InputDecoration(
@@ -37,24 +38,33 @@ class HomePageState extends State<HomePage> {
             ),
             SizedBox(height: 10),
             TextField(
+              obscureText: true,
               controller: passwordController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Password',
               ),
             ),
-            Spacer(),
+            Spacer(flex: 2),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                child: Text("Login"),
+                child: Text("Login", style: TextStyle(color: Colors.black)),
+                style: ButtonStyle(
+                  minimumSize: MaterialStateProperty.all<Size>(Size(150, 60)),
+
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      Theme.of(context)
+                          .primaryColor
+                          .withOpacity(1)), // Set the background color
+                ),
                 onPressed: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => JournalPage()));
                 },
               ),
             ),
-            Spacer(flex: 4)
+            Spacer(flex: 3)
           ],
         ),
       )),
